@@ -1,0 +1,45 @@
+-- Database Initialization Script
+CREATE DATABASE IF NOT EXISTS voiture;
+USE voiture;
+
+-- Car Table
+CREATE TABLE IF NOT EXISTS car (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    brand VARCHAR(100) NOT NULL,
+    model VARCHAR(100) NOT NULL,
+    year INT NOT NULL,
+    price_per_day DOUBLE NOT NULL,
+    available BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Users Table
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    role VARCHAR(20) DEFAULT 'CLIENT', -- ADMIN or CLIENT
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Rentals Table
+CREATE TABLE IF NOT EXISTS rentals (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    car_id BIGINT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    total_price DOUBLE NOT NULL,
+    status VARCHAR(20) DEFAULT 'BOOKED', -- BOOKED, COMPLETED, CANCELLED
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (car_id) REFERENCES car(id) ON DELETE CASCADE
+);
+
+-- Insert Demo Admin (password is 'admin123' - BCrypt)
+-- INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@drivehub.com', '$2a$10$8.UnVuG9HHgffUDAlk8lh.PInrCsyvXNnTYyN4m/h8H4NnEpxE.P.', 'ADMIN');
